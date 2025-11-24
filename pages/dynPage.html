@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>dynPage</title>
+    <!--  <link href="../modules/layui-v2.12.0/css/layui.css" rel="stylesheet"> -->
+    <link href="../modules/components/TabsSearchTable.css" rel="stylesheet">
+    <link href="../modules/components/NativeTable.css" rel="stylesheet">
+</head>
+
+<body class="light">
+    <div id="app" style="height: 100vh;">
+        <!--  <master-detail-view :schema-data="renderData1" :layout-mode="direction"></master-detail-view> -->
+
+        <!--   <div style="flex: 1; overflow: hidden;">
+            <NativeTable :columns="tab_columns" :data="tab.tableData" :loading="loading" :selected-id="selectedRowId"
+                @row-click="onRowClick" @action-click="onActionClick" />
+        </div> -->
+
+        <split-layout :mode="direction" :ratio="ratio">
+            <template #pane1>
+                <tabs-search-table :render-data="renderData1" @master-guid-change="onMasterGuidChange" />
+            </template>
+
+            <template #pane2>
+                <tabs-search-table :render-data="renderData2" :master-guid="masterGuid"/>
+            </template>
+        </split-layout>
+
+
+        <!--  <tabs-search-table :render-data="renderData1" /> -->
+    </div>
+
+
+
+
+
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script src="../modules/layui-v2.12.0/layui.js"></script>
+    <script src="../modules/vue-v3.3.8/vue.global.js"></script>
+    <script type="module">
+        import Global from '../utils/global.js'
+        //utils/global.js
+        import { NativeTable } from '../modules/components/NativeTable.js'
+        import { TabsSearchTable } from '../modules/components/TabsSearchTable.js'
+        import { SplitLayout } from '../modules/components/Components.js'
+        const { createApp, reactive, toRefs, ref, version, getCurrentInstance, directive } = Vue;
+        const vue = {
+            components: { NativeTable, TabsSearchTable, SplitLayout },
+            data() {
+                return {
+                    //split-layout
+                    direction: 'vertical',//vertical/horizontal
+                    ratio: 50,
+
+                    //tabs-search-table
+
+                    renderData1: [],
+                    renderData2: [],
+                    //TreeComponent
+                    treeid: "treeid",
+                    treedata: [
+                        {
+                            "title": "节点1",
+                            "id": "1",
+                            "children": [
+                                { "title": "子节点1", "id": "2", "children": [] },
+                                { "title": "子节点2", "id": "3", "children": [] }
+                            ]
+                        },
+                        {
+                            "title": "节点2",
+                            "id": "4",
+                            "children": []
+                        }
+                    ],
+                    //new
+                    masterGuid: '',
+
+                }
+            },
+            beforeMount() {
+                let getMenu = Global.getStorageSync('v2_ApiCommon_GetMenu_6bc8317ed67fbf833b5f8aff2c6d8f5e');
+                getMenu.data.dt0.forEach(node => {
+                    //当node.xOptions是字符串时且要么包含{要么包含[时，转换为对象
+                    if (node.xOptions?.length > 0 || node.xOptions?.indexOf('{') > -1 || node.xOptions?.indexOf('[') > -1) {
+                        node.xOptions = Global.tryParse(node.xOptions);
+                    }
+                });
+                let alldata = Global.buildMenuTree(getMenu.data.dt0);
+                this.renderData1 = Global.filterTree(alldata, { xCaption: 'filter主表' });
+
+                this.renderData2 = Global.filterTree(alldata, { xDesc: '用户子表' });//过滤掉子级table
+
+                //子表schema不存在filter,添加一个以xGUID为字段的filter
+                /*  debugger;
+                 if (_renderData2[0]?.xCategory === 'table') {
+                     let filter = {
+                         xGUID: _renderData2[0]?.xParentGUID,
+                         xCaption: '搜索',
+                         xCategory: 'filter',
+                         xChilds: []
+                     };
+                     let xChilds = _renderData2;
+                     xChilds.unshift({ "xGUID": "vir01","xParentGUID":_renderData2[0]?.xParentGUID, "xCaption": "搜索", "xCategory": "action", "xType": "_Search", "xEnable": true, "xVisiable": true });
+                     xChilds.unshift({ "xGUID": "vir02","xParentGUID":_renderData2[0]?.xParentGUID, "xCaption": "MastGUID", "xCategory": "detail", "xType": "text", "xEnable": true, "xVisiable": true, "xNotNull": true, "xCode": "MastGUID" });
+ 
+                     filter.xChilds = xChilds;
+                     this.renderData2 = [filter];
+                 } */
+
+                console.log("renderData:\n", JSON.stringify(this.renderData1));
+            },
+            methods: {
+                action(type) {
+                    if (type === "add") {
+                        layer.msg("你点击了新增");
+                    }
+                },
+                //TreeComponent
+                onNodeClick(node) {
+                    console.log('点击了节点:', node);
+                },
+                onNodeCheck(obj) {
+                    console.log('节点选中状态改变:', obj);
+                },
+                onMasterGuidChange(e) {
+                    console.log('主表GUID改变:', e);
+                    this.masterGuid = e.masterGUID;  // 主表点击行后得到 GUID
+                }
+
+
+            }
+
+        }
+        const app = createApp(vue);
+        window.insApp = app.mount('#app');
+
+    </script>
+</body>
+
+</html>
