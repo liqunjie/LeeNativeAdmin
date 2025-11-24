@@ -1,0 +1,261 @@
+/* 表格整体容器 */
+.native-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #e6e6e6;
+    box-sizing: border-box;
+    font-size: 14px;
+    background: #fff;
+}
+
+/* 表头区域 - 固定不滚动，通过 JS paddingRight 对齐 */
+.native-table-header {
+    flex: 0 0 auto;
+    background-color: #f8f8f8;
+    font-weight: bold;
+    border-bottom: 1px solid #e6e6e6;
+    overflow-y: scroll;
+    /* 预留位置，实际被隐藏 */
+}
+
+/* 隐藏表头区域的滚动条 (Chrome/Safari) */
+.native-table-header::-webkit-scrollbar {
+    width: 0;
+}
+
+/* 表体区域 - 占据剩余空间，自动出现滚动条 */
+.native-table-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    position: relative;
+    background: #fff;
+}
+
+/* 行样式 */
+.native-table-row {
+    display: flex;
+    border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.native-table-row:hover {
+    background-color: #f2f2f2;
+}
+
+.native-table-row.is-selected {
+    background-color: #f0f9eb;
+}
+
+.header-row {
+    color: #333;
+}
+
+/* 单元格通用样式 */
+.native-table-cell {
+    padding: 10px 15px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-right: 1px solid #e6e6e6;
+    box-sizing: border-box;
+    color: #666;
+}
+
+.native-table-cell:last-child {
+    border-right: none;
+}
+
+/* 特殊列：序号 */
+.fixed-width-50 {
+    width: 50px;
+    flex: none;
+    text-align: center;
+    background: #fafafa;
+}
+
+/* 特殊列：操作栏 */
+.action-column {
+    text-align: center;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 状态：加载遮罩 */
+.loading-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    color: #1E9FFF;
+}
+
+/* 状态：空数据 */
+.empty-text {
+    padding: 50px;
+    text-align: center;
+    color: #ccc;
+}
+
+/* Loading 动画 */
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #1E9FFF;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 兼容 Layui 按钮样式 (如项目中已有layui.css可移除) */
+.btn {
+    display: inline-block;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 8px;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 12px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    color: #fff;
+}
+.btn-xs {
+    height: 22px;
+    line-height: 22px;
+    padding: 0 5px;
+    font-size: 12px
+}
+.btn-primary {
+    border: 1px solid #C9C9C9;
+    background-color: #fff;
+    color: #555;
+}
+
+.btn-normal {
+    background-color: #1E9FFF;
+}
+
+.btn-danger {
+    background-color: #FF5722;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+/* =========================================
+   分页栏样式 (Pagination Styles)
+   ========================================= */
+
+/* 1. 分页栏容器 */
+.native-table-footer {
+    /* 关键布局属性 */
+    flex: 0 0 auto;       /* 固定高度，不随父容器伸缩 */
+    display: flex;        /* 启用 Flex 布局 */
+    justify-content: space-between; /* 左右两端对齐 */
+    align-items: center;  /* 垂直居中 */
+    
+    /* 外观样式 */
+    padding: 8px 15px;    /* 内边距 */
+    border-top: 1px solid #e6e6e6; /* 顶部分割线 */
+    background-color: #fff; /* 背景色 */
+    font-size: 13px;      /* 字号略小于表格内容 */
+    color: #666;          /* 字体颜色 */
+    user-select: none;    /* 防止双击选中文字 */
+}
+
+/* 2. 左侧信息 (共xx条) */
+.page-info {
+    white-space: nowrap;  /* 防止文字换行 */
+}
+
+/* 3. 右侧按钮区域 */
+.page-btns {
+    display: flex;
+    align-items: center;
+    gap: 8px;             /* 按钮之间的间距 */
+}
+
+/* 4. 分页按钮样式 */
+.page-btns button {
+    display: inline-block;
+    padding: 0 12px;
+    height: 28px;
+    line-height: 26px; /* 扣除边框高度 */
+    
+    border: 1px solid #d2d2d2;
+    background-color: #fff;
+    color: #333;
+    border-radius: 2px;
+    
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s; /* 平滑过渡效果 */
+    outline: none;
+}
+
+/* 按钮 Hover 状态 */
+.page-btns button:hover:not(:disabled) {
+    border-color: #1E9FFF; /* 悬停变为 Layui 蓝 */
+    color: #1E9FFF;
+}
+
+/* 按钮 Active (按下) 状态 */
+.page-btns button:active:not(:disabled) {
+    background-color: #f2f2f2;
+}
+
+/* 按钮 Disabled (禁用/第一页/最后一页) 状态 */
+.page-btns button:disabled {
+    cursor: not-allowed;
+    background-color: #fbfbfb;
+    color: #d2d2d2;
+    border-color: #e6e6e6;
+}
+
+/* 5. 当前页码数字样式 */
+.page-btns span {
+    display: inline-block;
+    min-width: 24px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    
+    /* 样式 - 可选：做成方块状或者纯文字状 */
+    background-color: #1E9FFF;
+    color: #fff;
+    border-radius: 2px;
+    font-weight: 500;
+    
+    /* 如果喜欢纯文字样式，可以使用下面这组替代：
+    font-weight: bold;
+    color: #333;
+    padding: 0 5px;
+    background: none;
+    */
+}

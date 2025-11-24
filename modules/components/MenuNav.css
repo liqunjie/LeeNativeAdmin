@@ -1,0 +1,134 @@
+/*导航菜单*/
+
+/* 防止意外横向滚动条 */
+/*  html,
+ body {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   overflow-x: hidden;
+ }
+ *,
+ *::before,
+ *::after {
+   box-sizing: inherit;
+ } */
+
+.page-shade {
+    position: fixed;
+    z-index: 99;
+    background-color: rgb(0, 0, 0);
+    opacity: 0.2;
+    transition: opacity .35s cubic-bezier(.34, .69, .1, 1);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.page-menu {
+    width: 100%;
+    height: fit-content;
+    background-color: var(--main-nav-bgcolor);
+    box-shadow: 2px 0 6px 0 #00000014;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.menu-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.menu-search-box {
+    margin-top: 10px;
+    position: relative;
+}
+
+.menu-search {
+    padding: 0 20px;
+}
+
+/*menu-search内的i标签的图标置于input内且居左*/
+.menu-search i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #999;
+}
+
+.menu-search-input {
+    flex: 1;
+    padding: 5px 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    color: rgba(0, 0, 0, .85);
+    height: 30px;
+    line-height: 1.3;
+    box-sizing: border-box;
+}
+
+.menu-item {
+    /* margin: 10px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-title {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--main-nav-color);
+    padding: 12px 12px 0px 12px;
+    /*  border-bottom: 2px solid #16baaa; */
+    position: relative;
+    display: inline-flex;
+    box-sizing: border-box;
+}
+
+/*让menu-title文字后面紧跟着垂直居中横线,横线不要超出menu-item*/
+.menu-title::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: var(--main-nav-hover-color);
+    margin: 0 10px;
+    align-self: center;
+
+}
+
+.menu-nav {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    color: var(--main-nav-color);
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.menu-nav li:hover {
+    background-color: var(--main-nav-hover-color);
+    border-radius: 4px;
+}
+
+.menu-nav li {
+    margin-right: 30px;
+    font-size: 16px;
+    list-style: none;
+    /*none auto disc */
+    list-style-position: inside;
+}
